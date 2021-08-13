@@ -10,6 +10,7 @@ import time
 from prettytable import PrettyTable
 import pandas as pd
 import plotly.express as px
+import subprocess
 
 class SPSS:
     
@@ -51,38 +52,32 @@ class SPSS:
     def predict(self, x: np.ndarray) -> np.ndarray:
         return self.model.predict(x.reshape(-1, 1))
 
-    def model_summary(self) -> None:
+
+    def model_summary(self) -> pd.DataFrame:
+
+        "Return DataFrame containing Model Summary"
+
         df = pd.DataFrame([{
-            "R" : (r := sqrt(self.model.score(self.sample_x, self.sample_y))),
-            "R-squared" : (rsq := r ** 2),
-            "Adjusted R-squared" : (arsq := 1 - ((1-rsq) * ((n := self.sample_x.size)-1) / (n-2))),
-            "Std Err of Estimate" : sqrt(1-arsq) * std(self.sample_y, ddof=1)
+                "R" : (r := sqrt(self.model.score(self.sample_x, self.sample_y))),
+                "R-squared" : (rsq := r ** 2),
+                "Adjusted R-squared" : (arsq := 1 - ((1-rsq) * ((n := self.sample_x.size)-1) / (n-2))),
+                "Std Err of Estimate" : sqrt(1-arsq) * std(self.sample_y, ddof=1)
         }])
-        with open("latex.tex", "w") as f:
-            f.write(
-                df.to_latex(
-                    index=False,
-                    column_format="cccc",
-                    float_format="%.6f",
-                    position="h"
-                )
-            )
+        return df
+        # with open("latex.tex", "w") as f:
+        #     f.write(
+        #         df.to_latex(
+        #             index=False,
+        #             column_format="cccc",
+        #             float_format="%.6f",
+        #             position="h"
+        #         )
+        #     )
         
-        # pt = PrettyTable(["R", "R-squared", "Adjusted R-squared", "Std Error of Estimate"])
-        # pt.title = "Model Summary"
-        # pt.max_width = 20
-        # pt.max_table_width = 85
-        # pt.add_row(
-        #     [
-        #         r := sqrt(self.model.score(self.sample_x, self.sample_y)),
-        #         rsq := r ** 2,
-        #         arsq := 1 - ((1-rsq) * ((n := self.sample_x.size)-1) / (n-2)),
-        #         sqrt(1-arsq) * std(self.sample_y, ddof=1)
-        #     ]
-        # )
-        # print(pt, "\n")
-    
-    def anova(self) -> None:
+
+    def anova(self) -> pd.DataFrame:
+
+        "Return DataFrame containing ANOVA analysis"
 
         df = pd.DataFrame({
                 "Model" : ["Regression", "Residual", "Total"],
@@ -114,54 +109,21 @@ class SPSS:
                     None
                 ]
             })
+        return df
+        # with open("latex.tex", "w") as f:
+        #     f.write(
+        #         df.to_latex(
+        #             index=False,
+        #             column_format="cccccc",
+        #             float_format="%.6f",
+        #             position="h",
+        #             na_rep=""
+        #         )
+        #     )
 
-        with open("latex.tex", "w") as f:
-            f.write(
-                df.to_latex(
-                    index=False,
-                    column_format="cccccc",
-                    float_format="%.6f",
-                    position="h",
-                    na_rep=""
-                )
-            )
+    def coefficients(self) -> pd.DataFrame:
 
-        # pt = PrettyTable(["Model", "Sum of Squares", "Deg of Freedom", "Mean Square", "F", "Significance Lvl"])
-        # pt.title = "ANOVA"
-        # pt.max_table_width = 114
-        # pt.add_rows(
-        #     [
-        #         [
-        #             "Regression",
-        #             ssreg := (
-        #                 (sstot := sum([(y - np.mean(self.sample_y))**2 for y in self.sample_y])) - (ssres := self.model._residues)
-        #             ),
-        #             dfreg := 1, # number of independent var
-        #             msreg := ssreg/dfreg,
-        #             f_score := msreg/(msres := ssres/(dfres := self.sample_x.size - 1 - dfreg)),
-        #             stats.t.sf(f_score, self.sample_x.size-2)
-        #         ],
-        #         [
-        #             "Residual",
-        #             ssres,
-        #             dfres,
-        #             msres,
-        #             "",
-        #             ""
-        #         ],
-        #         [
-        #             "Total",
-        #             sstot,
-        #             dfreg + dfres,
-        #             "",
-        #             "",
-        #             ""
-        #         ]
-        #     ]
-        # )
-        # print(pt, "\n")
-
-    def coefficients(self) -> None:
+        "Return DataFrame containing coefficient analysis"
 
         df = pd.DataFrame({
                 "Model" : ["Constant (x)", "Independent Var (y)"],
@@ -186,43 +148,48 @@ class SPSS:
                     stats.t.sf(t_y, dfres) * 2
                 ]
             })
+        return df
 
-        with open("latex.tex", "w") as f:
-            f.write(
-                df.to_latex(
-                    index=False,
-                    column_format="cccccc",
-                    float_format="%.6f",
-                    position="h",
-                    na_rep=""
-                )
-            )
+        # with open("latex.tex", "w") as f:
+        #     f.write(
+        #         df.to_latex(
+        #             index=False,
+        #             column_format="cccccc",
+        #             float_format="%.6f",
+        #             position="h",
+        #             na_rep=""
+        #         )
+        #     )
 
-        # pt = PrettyTable(["Model", "Un-std B", "Std Error", "Beta", "T", "Significance Lvl "])
-        # pt.title = "Coefficients"
-        # pt.max_table_width = 122
-        # pt.add_rows(
-        #     [
-        #         [
-        #             "Constant (x)",
-        #             b := (results := stats.linregress(self.sample_x.flatten(), self.sample_y)).intercept,
-        #             b_err := results.intercept_stderr,
-        #             "",
-        #             t_x := b / b_err,
-        #             stats.t.sf(t_x, self.sample_x.size-2) * 2
-        #         ],
-        #         [
-        #             "Independent Variable (y)",
-        #             m := results.slope,
-        #             m_err := results.stderr,
-        #             beta := std(self.sample_x, ddof=1) / std(self.sample_y, ddof=1) * m,
-        #             t_y := m / m_err,
-        #             stats.t.sf(t_y, self.sample_x.size-2) * 2
-        #         ]
-        #     ]
-        # )
-        # print(pt, "\n")
-    
+    def compile_latex(self, filename: str) -> None:
+        with open("stats\\template.txt", "r") as f:
+            latex = "".join(f.readlines())
+            latex += self.model_summary().to_latex(
+                        index=False,
+                        column_format="cccc",
+                        float_format="%.6f",
+                        position="h"
+                    )
+            latex += "\n\\subsection{ANOVA}\n"
+            latex += self.anova().to_latex(
+                        index=False,
+                        column_format="cccccc",
+                        float_format="%.6f",
+                        position="h",
+                        na_rep=""
+                    )
+            latex += "\n\\subsection{Coefficients}\n"
+            latex += self.coefficients().to_latex(
+                        index=False,
+                        column_format="cccccc",
+                        float_format="%.6f",
+                        position="h",
+                        na_rep=""
+                    )
+            latex += "\n\n\end{document}"
+            with open(filename, "w") as g:
+                g.write(latex)
+
     def plot(self) -> None:
         graph = px.scatter(
             pd.DataFrame(
@@ -241,5 +208,15 @@ spss.sample_y = np.array([26,21,24,21,19,13,19,11,23,15,13,4,18,12,3,11,15,6,13,
 spss.fit()
 # spss.model_summary()
 # spss.anova()
-spss.coefficients()
+# spss.coefficients()
 # spss.plot()
+
+spss.compile_latex("stats\\latex.tex")
+
+subprocess.run(
+    ['pdflatex',
+    r"C:\Users\User\Desktop\py\stats\latex.tex",
+    '-interaction=nonstopmode',
+    "-output-directory=C:\\Users\\User\\Desktop\\py\\stats"]
+)
+
