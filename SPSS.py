@@ -1,17 +1,15 @@
-from math import sqrt
 import numbers
-import numpy as np
-from numpy.core.fromnumeric import size, std
-from numpy.core.numeric import allclose
-from scipy import stats
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-import time
-from prettytable import PrettyTable
-import pandas as pd
-import plotly.express as px
 import subprocess
 import webbrowser as wb
+from math import sqrt
+
+import numpy as np
+import pandas as pd
+import plotly.express as px
+from numpy.core.fromnumeric import size, std
+from scipy import stats
+from sklearn.linear_model import LinearRegression
+
 
 class SPSS:
     
@@ -65,15 +63,7 @@ class SPSS:
                 "Std Err of Estimate" : sqrt(1-arsq) * std(self.sample_y, ddof=1)
         }])
         return df
-        # with open("latex.tex", "w") as f:
-        #     f.write(
-        #         df.to_latex(
-        #             index=False,
-        #             column_format="cccc",
-        #             float_format="%.6f",
-        #             position="h"
-        #         )
-        #     )
+
         
 
     def anova(self) -> pd.DataFrame:
@@ -111,16 +101,7 @@ class SPSS:
                 ]
             })
         return df
-        # with open("latex.tex", "w") as f:
-        #     f.write(
-        #         df.to_latex(
-        #             index=False,
-        #             column_format="cccccc",
-        #             float_format="%.6f",
-        #             position="h",
-        #             na_rep=""
-        #         )
-        #     )
+
 
     def coefficients(self) -> pd.DataFrame:
 
@@ -151,16 +132,6 @@ class SPSS:
             })
         return df
 
-        # with open("latex.tex", "w") as f:
-        #     f.write(
-        #         df.to_latex(
-        #             index=False,
-        #             column_format="cccccc",
-        #             float_format="%.6f",
-        #             position="h",
-        #             na_rep=""
-        #         )
-        #     )
 
     def compile_latex(self, filename: str) -> None:
         with open("stats\\template.txt", "r") as f:
@@ -211,10 +182,6 @@ spss = SPSS()
 spss.sample_x = np.array([11,9,9,9,8,8,8,6,6,5,5,5,5,5,5,4,4,4,3,3,3])
 spss.sample_y = np.array([26,21,24,21,19,13,19,11,23,15,13,4,18,12,3,11,15,6,13,4,14])
 spss.fit()
-# spss.model_summary()
-# spss.anova()
-# spss.coefficients()
-# spss.plot()
 
 spss.compile_latex(r"stats\latex.tex")
 
