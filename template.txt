@@ -1,0 +1,22 @@
+\pdfminorversion=4
+\documentclass[]{article}
+
+
+\usepackage{booktabs, xcolor}
+\usepackage[a4paper]{geometry}
+
+
+\definecolor{gold}{rgb}{0.77, 0.7, 0.35}
+
+
+\begin{document}
+
+
+\title{Linear Regression Statistical Report}
+\author{\color{gold}{nGQD}}
+\maketitle
+
+
+\section{Tables}
+
+\subsection{Model Summary}
