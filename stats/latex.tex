@@ -1,0 +1,62 @@
+\pdfminorversion=4
+\documentclass[]{article}
+
+
+\usepackage{booktabs, xcolor}
+\usepackage[a4paper]{geometry}
+
+
+\definecolor{gold}{rgb}{0.77, 0.7, 0.35}
+
+
+\begin{document}
+
+
+\title{Linear Regression Statistical Report}
+\author{\color{gold}{nGQD}}
+\maketitle
+
+
+\section{Tables}
+
+\subsection{Model Summary}
+\begin{table}[h]
+\centering
+\begin{tabular}{cccc}
+\toprule
+       R &  R-squared &  Adjusted R-squared &  Std Err of Estimate \\
+\midrule
+0.712507 &   0.507666 &            0.481753 &             4.816400 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{ANOVA}
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+     Model &  Sum of Squares &  Deg of Freedom &  Mean Square &         F &  Sig Lvl \\
+\midrule
+Regression &      454.481539 &               1 &   454.481539 & 19.591652 & 0.000000 \\
+  Residual &      440.756556 &              19 &    23.197713 &           &          \\
+     Total &      895.238095 &              20 &              &           &          \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Coefficients}
+\begin{table}[h]
+\centering
+\begin{tabular}{cccccc}
+\toprule
+              Model &  Un-std B &  Std Err &     Beta &        T &  Sig Lvl \\
+\midrule
+       Constant (x) &  2.366696 & 2.940824 &          & 0.804773 & 0.430907 \\
+Independent Var (y) &  2.042395 & 0.461428 & 0.712507 & 4.426246 & 0.000290 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\end{document}
