@@ -11,6 +11,7 @@ from prettytable import PrettyTable
 import pandas as pd
 import plotly.express as px
 import subprocess
+import webbrowser as wb
 
 class SPSS:
     
@@ -128,12 +129,12 @@ class SPSS:
         df = pd.DataFrame({
                 "Model" : ["Constant (x)", "Independent Var (y)"],
                 "Un-std B" : [
-                    b := (results := stats.linregress(self.sample_x.flatten(), self.sample_y)).intercept,
-                    m := results.slope
+                    b := (linreg := stats.linregress(self.sample_x.flatten(), self.sample_y)).intercept,
+                    m := linreg.slope
                 ],
                 "Std Err" : [
-                    b_err := results.intercept_stderr,
-                    m_err := results.stderr
+                    b_err := linreg.intercept_stderr,
+                    m_err := linreg.stderr
                 ],
                 "Beta" : [
                     None,
@@ -195,12 +196,16 @@ class SPSS:
             pd.DataFrame(
                 {"Constant":self.sample_x.flatten(), "Independent Variable":self.sample_y}
             ),
-            x="Constant",
-            y="Independent Variable",
-            trendline="ols",
-            trendline_color_override="red"
+            title = "Interactive Linear Regression Graph",
+            x = "Constant",
+            y = "Independent Variable",
+            trendline = "ols",
+            trendline_color_override="gold",
+            template = "presentation",
+            color = "Constant",
+            color_continuous_scale = "purp"
         )
-        graph.show()
+        graph.write_html(r"stats\graph.html")
 
 spss = SPSS()
 spss.sample_x = np.array([11,9,9,9,8,8,8,6,6,5,5,5,5,5,5,4,4,4,3,3,3])
@@ -211,12 +216,15 @@ spss.fit()
 # spss.coefficients()
 # spss.plot()
 
-spss.compile_latex("stats\\latex.tex")
+spss.compile_latex(r"stats\latex.tex")
 
 subprocess.run(
     ['pdflatex',
     r"C:\Users\User\Desktop\py\stats\latex.tex",
     '-interaction=nonstopmode',
-    "-output-directory=C:\\Users\\User\\Desktop\\py\\stats"]
+    r"-output-directory=C:\Users\User\Desktop\py\stats"]
 )
 
+spss.plot()
+
+wb.open(r"stats\Linear Regression Statistical Report.html", new=2)
