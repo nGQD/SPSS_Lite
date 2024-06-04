@@ -1,6 +1,6 @@
 # SPSS_Lite
 A statistical calculator developed by nGQD for satisfaction.
-It is currently able to compute Linear Regression and One-Way ANOVA Test for 2 variables/categories. The computed statistics would be wrapped inside pandas DataFrame and get converted into latex, which would be compiled by [MiKTeX](https://miktex.org/download). The PDF would get embedded within a HTML and prompted upon every execution for the ease of inspection (there's a visualization in the HTML too btw).
+It is currently able to compute Linear Regression and One-Way ANOVA Test for 2 variables/categories. The computed statistics would be wrapped inside pandas DataFrame and get converted into latex, which would be compiled by [MiKTeX](https://miktex.org/download). The PDF would get embedded within an HTML and prompted upon every execution for the ease of inspection (there's a visualization in the HTML too btw).
 
 You can always modify the codes to your desired format by checking out stats/template.txt.
 
@@ -12,4 +12,4 @@ You can always modify the codes to your desired format by checking out stats/tem
 3. You're good to go!
 
 ## Output
-<iframe src="./latex.pdf" style="width: 100%;height: 100%;border: none;"></iframe>
+<iframe src="./stat/latex.pdf" style="width: 100%;height: 100%;border: none;"></iframe>
