@@ -1,10 +1,15 @@
 # SPSS_Lite
-A statistical calculator developed by nGQD for academic purposes.
+A statistical calculator developed by nGQD for satisfaction.
+It is currently able to compute Linear Regression and One-Way ANOVA Test for 2 variables/categories. The computed statistics would be wrapped inside pandas DataFrame and get converted into latex, which would be compiled by [MiKTeX](https://miktex.org/download). The PDF would get embedded within a HTML and prompted upon every execution for the ease of inspection (there's a visualization in the HTML too btw).
 
-Installation steps:
+You can always modify the codes to your desired format by checking out stats/template.txt.
 
-1. Create a folder named "py" on Desktop
-2. (Optional) Setup and activate venv
-3. Launch terminal, cd to "py" folder
-4. Run pip install -r requirements.txt on cmd
-5. Install MiKTeX
+## Installation
+
+0. (Optional) Setup and activate venv
+1. Run pip install -r requirements.txt on cmd
+2. Install MiKTeX
+3. You're good to go!
+
+## Output
+<iframe src="latex.pdf" style="width: 100%;height: 100%;border: none;"></iframe>
