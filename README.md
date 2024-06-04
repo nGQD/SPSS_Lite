@@ -12,4 +12,6 @@ You can always modify the codes to your desired format by checking out stats/tem
 3. You're good to go!
 
 ## Output
-<embed style = "margin: auto; min-height:100vh; width: 100%" src = "./stats/latex.pdf#view=FitH"></embed>
+
+![](./static/sample_output.jpg)
+
