@@ -159,15 +159,11 @@ class SPSS:
 if __name__ == "__main__":
     spss = SPSS()
 
-
     spss.sample_x = np.array([1,9,8,6])
     spss.sample_y = np.array([6,21,24,19])
     spss.fit()
 
-
-
     spss.compile_latex(os.path.join(os.getcwd(), r"stats/latex.tex"))
-
 
     subprocess.run(
         [
@@ -181,26 +177,3 @@ if __name__ == "__main__":
     spss.plot()
 
     wb.open(os.path.join(os.getcwd(), r"stats/Linear Regression Statistical Report.html"), new=2)
-
-    # C:\Users\user\AppData\Local\Programs\MiKTeX\miktex\bin\x64
-
-
-# spss = SPSS()
-# spss.sample_x = np.array([11,9,9,9,8,8,8,6,6,5,5,5,5,5,5,4,4,4,3,3,3])
-# spss.sample_y = np.array([26,21,24,21,19,13,19,11,23,15,13,4,18,12,3,11,15,6,13,4,14])
-# spss.fit()
-
-# spss.compile_latex(r"stats/latex.tex")
-
-# print(os.path.join(os.getcwd(), r"stats\latex.tex"))
-
-# subprocess.run(
-#     ['pdflatex',
-#     os.path.join(os.getcwd(), r"stats\latex.tex"),
-#     '-interaction=nonstopmode',
-#     r"-output-directory=stats"]
-# )
-
-# spss.plot()
-
-# wb.open(r"../stats/Linear Regression Statistical Report.html", new=2)
