@@ -12,4 +12,4 @@ You can always modify the codes to your desired format by checking out stats/tem
 3. You're good to go!
 
 ## Output
-<iframe src="./stats/latex.pdf" style="width: 100%;height: 100%;border: none;"></iframe>
+<embed style = "margin: auto; min-height:100vh; width: 100%" src = "./stats/latex.pdf#view=FitH">
