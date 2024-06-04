@@ -2,13 +2,16 @@ import numbers
 import subprocess
 import webbrowser as wb
 from math import sqrt
+import os
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
-from numpy.core.fromnumeric import size, std
+from numpy.core.fromnumeric import std
 from scipy import stats
 from sklearn.linear_model import LinearRegression
+
+os.environ["PATH"] += os.pathsep + r"C:\Users\user\AppData\Local\Programs\MiKTeX\miktex\bin\x64"
 
 
 class SPSS:
@@ -70,34 +73,10 @@ class SPSS:
         "Return DataFrame containing ANOVA analysis"
 
         df = pd.DataFrame({
-                "Model" : ["Regression", "Residual", "Total"],
-                "Sum of Squares" : [
-                    ssreg := (
-                        (sstot := sum([(y - np.mean(self.sample_y))**2 for y in self.sample_y])) - (ssres := self.model._residues)
-                    ),
-                    ssres,
-                    sstot
+                "Model" : ["F-Statistic", "P-value"],
+                "One-Way" : [
+                    *stats.f_oneway(self.sample_x.flatten(), self.sample_y),
                 ],
-                "Deg of Freedom" : [
-                    dfreg := 1,
-                    dfres := (dftot := self.sample_x.size - 1) - dfreg,
-                    dftot
-                ],
-                "Mean Square" : [
-                    msreg := ssreg/dfreg,
-                    msres := ssres/dfres,
-                    None
-                ],
-                "F" : [
-                    f_score := msreg/msres,
-                    None,
-                    None
-                ],
-                "Sig Lvl" : [
-                    stats.t.sf(f_score, dfres),
-                    None,
-                    None
-                ]
             })
         return df
        
@@ -175,23 +154,53 @@ class SPSS:
             color = "Constant",
             color_continuous_scale = "purp"
         )
-        graph.write_html(r"stats\graph.html")
+        graph.write_html(os.path.join(os.getcwd(), r"stats/graph.html"))
 
-spss = SPSS()
-spss.sample_x = np.array([11,9,9,9,8,8,8,6,6,5,5,5,5,5,5,4,4,4,3,3,3])
-spss.sample_y = np.array([26,21,24,21,19,13,19,11,23,15,13,4,18,12,3,11,15,6,13,4,14])
-spss.fit()
+if __name__ == "__main__":
+    spss = SPSS()
 
 
-spss.compile_latex(r"stats\latex.tex")
+    spss.sample_x = np.array([1,9,8,6])
+    spss.sample_y = np.array([6,21,24,19])
+    spss.fit()
 
-subprocess.run(
-    ['pdflatex',
-    r"C:\Users\User\Desktop\py\stats\latex.tex",
-    '-interaction=nonstopmode',
-    r"-output-directory=C:\Users\User\Desktop\py\stats"]
-)
 
-spss.plot()
 
-wb.open(r"stats\Linear Regression Statistical Report.html", new=2)
+    spss.compile_latex(os.path.join(os.getcwd(), r"stats/latex.tex"))
+
+
+    subprocess.run(
+        [
+            'pdflatex',
+            os.path.join(os.getcwd(), r"stats/latex.tex"),
+            '-interaction=nonstopmode',
+            r"-output-directory=stats"
+        ], shell=True
+    )
+
+    spss.plot()
+
+    wb.open(os.path.join(os.getcwd(), r"stats/Linear Regression Statistical Report.html"), new=2)
+
+    # C:\Users\user\AppData\Local\Programs\MiKTeX\miktex\bin\x64
+
+
+# spss = SPSS()
+# spss.sample_x = np.array([11,9,9,9,8,8,8,6,6,5,5,5,5,5,5,4,4,4,3,3,3])
+# spss.sample_y = np.array([26,21,24,21,19,13,19,11,23,15,13,4,18,12,3,11,15,6,13,4,14])
+# spss.fit()
+
+# spss.compile_latex(r"stats/latex.tex")
+
+# print(os.path.join(os.getcwd(), r"stats\latex.tex"))
+
+# subprocess.run(
+#     ['pdflatex',
+#     os.path.join(os.getcwd(), r"stats\latex.tex"),
+#     '-interaction=nonstopmode',
+#     r"-output-directory=stats"]
+# )
+
+# spss.plot()
+
+# wb.open(r"../stats/Linear Regression Statistical Report.html", new=2)
